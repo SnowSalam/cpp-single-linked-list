@@ -86,6 +86,7 @@ class SingleLinkedList {
         // Возвращает ссылку на самого себя
         // Инкремент итератора, не указывающего на существующий элемент списка, приводит к неопределённому поведению
         BasicIterator& operator++() noexcept {
+            assert(node_ != nullptr);
             node_ = node_->next_node;
             return *this;
         }
@@ -95,6 +96,7 @@ class SingleLinkedList {
         // Инкремент итератора, не указывающего на существующий элемент списка,
         // приводит к неопределённому поведению
         BasicIterator operator++(int) noexcept {
+            assert(node_ != nullptr);
             BasicIterator temp = *this;
             node_ = node_->next_node;
             return temp;
@@ -104,6 +106,7 @@ class SingleLinkedList {
         // Вызов этого оператора у итератора, не указывающего на существующий элемент списка,
         // приводит к неопределённому поведению
         [[nodiscard]] reference operator*() const noexcept {
+            assert(node_ != nullptr);
             return node_->value;
         }
 
@@ -111,6 +114,7 @@ class SingleLinkedList {
         // Вызов этого оператора у итератора, не указывающего на существующий элемент списка,
         // приводит к неопределённому поведению
         [[nodiscard]] pointer operator->() const noexcept {
+            assert(node_ != nullptr);
             return &(node_->value);
         }
 
@@ -130,15 +134,11 @@ public:
 
     SingleLinkedList(const SingleLinkedList& other) {
         assert(size_ == 0 && head_.next_node == nullptr);
-        SingleLinkedList tmp, tmp2;
+        BasicIterator<Type> it(&head_);
 
         for (const auto& node : other) {
-            tmp.PushFront(node);
+            it = InsertAfter(it, node);
         }
-        for (const auto& node : tmp) {
-            tmp2.PushFront(node);
-        }
-        swap(tmp2);
     }
 
     ~SingleLinkedList() {
